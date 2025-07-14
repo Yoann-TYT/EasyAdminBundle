@@ -626,11 +626,12 @@ abstract class AbstractCrudController extends AbstractController implements Crud
                 continue;
             }
 
+            $filesystemOperator = $config->getOption('filesystem_operator');
             $uploadDelete = $config->getOption('upload_delete');
 
             if ($state->hasCurrentFiles() && ($state->isDelete() || (!$state->isAddAllowed() && $state->hasUploadedFiles()))) {
                 foreach ($state->getCurrentFiles() as $file) {
-                    $uploadDelete($file);
+                    $uploadDelete($file, $filesystemOperator);
                 }
                 $state->setCurrentFiles([]);
             }
@@ -640,8 +641,8 @@ abstract class AbstractCrudController extends AbstractController implements Crud
             $uploadNew = $config->getOption('upload_new');
 
             foreach ($state->getUploadedFiles() as $index => $file) {
-                $fileName = u($filePaths[$index])->replace($uploadDir, '')->toString();
-                $uploadNew($file, $uploadDir, $fileName);
+                $fileName = u($filePaths[$index]);
+                $uploadNew($file, $uploadDir, $fileName, $filesystemOperator);
             }
         }
     }
