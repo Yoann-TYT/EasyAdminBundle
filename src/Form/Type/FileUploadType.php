@@ -4,6 +4,7 @@ namespace EasyCorp\Bundle\EasyAdminBundle\Form\Type;
 
 use EasyCorp\Bundle\EasyAdminBundle\Form\DataTransformer\StringToFileTransformer;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

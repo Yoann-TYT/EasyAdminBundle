@@ -22,7 +22,7 @@ class StringToFileTransformer implements DataTransformerInterface
     private $uploadValidate;
     private bool $multiple;
 
-    public function __construct(string $uploadDir, callable $uploadFilename, callable $uploadValidate, bool $multiple, ?FilesystemOperator $filesystemOperator = null)
+    public function __construct(?string $uploadDir, callable $uploadFilename, callable $uploadValidate, bool $multiple, ?FilesystemOperator $filesystemOperator = null)
     {
         $this->uploadDir = $uploadDir;
         $this->uploadFilename = $uploadFilename;
