@@ -41,7 +41,6 @@ final class ImageConfigurator implements FieldConfiguratorInterface
         }
         $field->setFormTypeOption('uploaded_file_adapter', $uploadedFileAdapter);
 
-
         $formattedValue = \is_array($field->getValue())
             ? $this->getImagesPaths($field->getValue(), $uploadedFileAdapter)
             : $this->getImagePath($field->getValue(), $uploadedFileAdapter);
@@ -63,7 +62,6 @@ final class ImageConfigurator implements FieldConfiguratorInterface
 
     /**
      * @param array<string|null>|null $images
-     * @param UploadedFileAdapterInterface $uploadedFileAdapter
      *
      * @return array<string|null>
      */

@@ -25,5 +25,4 @@ class UploadedFileAdapterFactory
     {
         return new FlysystemFileAdapter($filesystemOperator);
     }
-
 }

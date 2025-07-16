@@ -5,15 +5,15 @@ namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Adapter;
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\FlysystemFileAdapter;
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\LocalFileAdapter;
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterFactory;
-use PHPUnit\Framework\TestCase;
 use League\Flysystem\FilesystemOperator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Yoann Chocteau <yoann@chocteau.dev>
  */
 class UploadedFileAdapterFactoryTest extends TestCase
 {
-    private const PROJECT_DIR = __DIR__ . '/../TestApplication';
+    private const PROJECT_DIR = __DIR__.'/../TestApplication';
 
     private UploadedFileAdapterFactory $factory;
 

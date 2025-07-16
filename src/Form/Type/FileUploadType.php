@@ -2,7 +2,6 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Form\Type;
 
-use EasyCorp\Bundle\EasyAdminBundle\Adapter\LocalFileAdapter;
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Form\DataTransformer\StringToFileTransformer;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
@@ -144,7 +143,6 @@ class FileUploadType extends AbstractType implements DataMapperInterface
         $resolver->setAllowedTypes('allow_delete', 'bool');
         $resolver->setAllowedTypes('file_constraints', [Constraint::class, Constraint::class.'[]']);
         $resolver->setAllowedTypes('uploaded_file_adapter', [UploadedFileAdapterInterface::class, 'null']);
-
 
         $resolver->setNormalizer('upload_dir', function (Options $options, ?string $value): ?string {
             if (null === $value) {

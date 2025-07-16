@@ -4,8 +4,8 @@ namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Adapter;
 
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\FlysystemFileAdapter;
 use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterFactory;
-use PHPUnit\Framework\TestCase;
 use League\Flysystem\FilesystemOperator;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class FlysystemFileAdapterTest extends TestCase
 {
-    private const PROJECT_DIR = __DIR__ . '/../TestApplication';
+    private const PROJECT_DIR = __DIR__.'/../TestApplication';
 
     private UploadedFileAdapterFactory $factory;
 

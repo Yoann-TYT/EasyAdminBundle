@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class LocalFileAdapterTest extends TestCase
 {
-    private const PROJECT_DIR = __DIR__ . '/../TestApplication';
+    private const PROJECT_DIR = __DIR__.'/../TestApplication';
 
     private UploadedFileAdapterFactory $factory;
 

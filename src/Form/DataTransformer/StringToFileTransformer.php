@@ -2,11 +2,11 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Form\DataTransformer;
 
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 
 /**
  * @author Yonel Ceruto <yonelceruto@gmail.com>
@@ -95,6 +95,7 @@ class StringToFileTransformer implements DataTransformerInterface
             }
 
             $filename = ($this->uploadFilename)($value);
+
             return ($this->uploadValidate)($filename, $this->uploadedFileAdapter);
         }
 
