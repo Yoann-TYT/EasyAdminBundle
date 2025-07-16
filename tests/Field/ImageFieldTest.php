@@ -2,9 +2,10 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Field;
 
+use App\Adapter\FlysystemFileAdapter;
+use App\Adapter\UploadedFileAdapterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\ImageConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use League\Flysystem\FilesystemOperator;
 
 class ImageFieldTest extends AbstractFieldTest
 {
@@ -16,13 +17,14 @@ class ImageFieldTest extends AbstractFieldTest
         $this->configurator = new ImageConfigurator($projectDir);
     }
 
-    public function testFilesystemOperator(): void
+    public function testFlysystemFileAdapter(): void
     {
-        $filesystemOperator = $this->createStub(FilesystemOperator::class);
+        /** @var UploadedFileAdapterInterface $filesystemOperator */
+        $filesystemOperator = $this->createStub(FlysystemFileAdapter::class);
 
-        $field = ImageField::new('foo')->setFilesystemOperator($filesystemOperator);
+        $field = ImageField::new('foo')->setUploadedFileAdapter($filesystemOperator);
         $fieldDto = $this->configure($field);
 
-        self::assertNotNull($fieldDto->getCustomOption(ImageField::OPTION_FILESYSTEM_OPERATOR));
+        self::assertNotNull($fieldDto->getCustomOption(ImageField::OPTION_UPLOADED_FILE_ADAPTER));
     }
 }

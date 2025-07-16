@@ -6,29 +6,28 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use EasyCorp\Bundle\EasyAdminBundle\Decorator\FlysystemFile;
 use League\Flysystem\FilesystemOperator;
+use App\Adapter\UploadedFileAdapterInterface;
 
 /**
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
 class StringToFileTransformer implements DataTransformerInterface
 {
-    private ?string $uploadDir;
-    private ?FilesystemOperator $filesystemOperator;
     /** @var callable */
     private $uploadFilename;
     /** @var callable */
     private $uploadValidate;
     private bool $multiple;
+    private UploadedFileAdapterInterface $uploadedFileAdapter;
 
-    public function __construct(?string $uploadDir, callable $uploadFilename, callable $uploadValidate, bool $multiple, ?FilesystemOperator $filesystemOperator = null)
+    public function __construct(?string $uploadDir, callable $uploadFilename, callable $uploadValidate, bool $multiple, ?FilesystemOperator $filesystemOperator = null, UploadedFileAdapterInterface $uploadedFileAdapter)
     {
         $this->uploadDir = $uploadDir;
         $this->uploadFilename = $uploadFilename;
         $this->uploadValidate = $uploadValidate;
         $this->multiple = $multiple;
-        $this->filesystemOperator = $filesystemOperator;
+        $this->uploadedFileAdapter = $uploadedFileAdapter;
     }
 
     public function transform(mixed $value): null|File|array
@@ -79,12 +78,8 @@ class StringToFileTransformer implements DataTransformerInterface
             throw new TransformationFailedException('Expected a string or null.');
         }
 
-        if (null !== $this->filesystemOperator) {
-            if ($this->filesystemOperator->fileExists($value)) {
-                return new FlysystemFile($this->filesystemOperator, $value);
-            }
-        } elseif (is_file($this->uploadDir.$value)) {
-            return new File($this->uploadDir.$value);
+        if ($this->uploadedFileAdapter->supports($value)) {
+            return $this->uploadedFileAdapter->create($value);
         }
 
         return null;
