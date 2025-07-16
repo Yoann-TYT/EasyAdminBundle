@@ -2,8 +2,8 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Field;
 
-use App\Adapter\FlysystemFileAdapter;
-use App\Adapter\UploadedFileAdapterInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\FlysystemFileAdapter;
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\ImageConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 

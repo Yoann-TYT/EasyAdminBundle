@@ -6,8 +6,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use League\Flysystem\FilesystemOperator;
-use App\Adapter\UploadedFileAdapterInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 
 /**
  * @author Yonel Ceruto <yonelceruto@gmail.com>
@@ -21,16 +20,15 @@ class StringToFileTransformer implements DataTransformerInterface
     private bool $multiple;
     private UploadedFileAdapterInterface $uploadedFileAdapter;
 
-    public function __construct(?string $uploadDir, callable $uploadFilename, callable $uploadValidate, bool $multiple, ?FilesystemOperator $filesystemOperator = null, UploadedFileAdapterInterface $uploadedFileAdapter)
+    public function __construct(callable $uploadFilename, callable $uploadValidate, bool $multiple, UploadedFileAdapterInterface $uploadedFileAdapter)
     {
-        $this->uploadDir = $uploadDir;
         $this->uploadFilename = $uploadFilename;
         $this->uploadValidate = $uploadValidate;
         $this->multiple = $multiple;
         $this->uploadedFileAdapter = $uploadedFileAdapter;
     }
 
-    public function transform(mixed $value): null|File|array
+    public function transform(mixed $value): mixed
     {
         if (null === $value || [] === $value) {
             return null;
@@ -47,7 +45,7 @@ class StringToFileTransformer implements DataTransformerInterface
         return array_map([$this, 'doTransform'], $value);
     }
 
-    public function reverseTransform(mixed $value): null|File|array
+    public function reverseTransform(mixed $value): mixed
     {
         if (null === $value || [] === $value) {
             return null;
@@ -97,7 +95,6 @@ class StringToFileTransformer implements DataTransformerInterface
             }
 
             $filename = ($this->uploadFilename)($value);
-
             return ($this->uploadValidate)($filename);
         }
 

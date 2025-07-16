@@ -2,9 +2,10 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Form\Type;
 
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\LocalFileAdapter;
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Form\DataTransformer\StringToFileTransformer;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -37,20 +38,19 @@ class FileUploadType extends AbstractType implements DataMapperInterface
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $uploadDir = $options['upload_dir'];
         $uploadFilename = $options['upload_filename'];
         $uploadValidate = $options['upload_validate'];
         $allowAdd = $options['allow_add'];
-        $filesystemOperator = $options['filesystem_operator'];
+        $uploadedFileAdapter = $options['uploaded_file_adapter'];
         $options['constraints'] = (bool) $options['multiple'] ? new All($options['file_constraints']) : $options['file_constraints'];
-        unset($options['upload_dir'], $options['upload_new'], $options['upload_delete'], $options['upload_filename'], $options['upload_validate'], $options['download_path'], $options['allow_add'], $options['allow_delete'], $options['compound'], $options['file_constraints'], $options['filesystem_operator']);
+        unset($options['upload_dir'], $options['upload_new'], $options['upload_delete'], $options['upload_filename'], $options['upload_validate'], $options['download_path'], $options['allow_add'], $options['allow_delete'], $options['compound'], $options['file_constraints'], $options['uploaded_file_adapter']);
 
         $builder->add('file', FileType::class, $options);
         $builder->add('delete', CheckboxType::class, ['required' => false]);
 
         $builder->setDataMapper($this);
         $builder->setAttribute('state', new FileUploadState($allowAdd));
-        $builder->addModelTransformer(new StringToFileTransformer($uploadDir, $uploadFilename, $uploadValidate, $options['multiple'], $filesystemOperator));
+        $builder->addModelTransformer(new StringToFileTransformer($uploadFilename, $uploadValidate, $options['multiple'], $uploadedFileAdapter));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
@@ -81,26 +81,14 @@ class FileUploadType extends AbstractType implements DataMapperInterface
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $uploadDir = fn (Options $options) => $options['filesystem_operator'] ? null : $this->projectDir.'/public/uploads/files/';
+        $uploadDir = $this->projectDir.'/public/uploads/files/';
 
-        $uploadNew = static function (UploadedFile $file, ?string $uploadDir, string $fileName, ?FilesystemOperator $filesystemOperator = null) {
-            if (null === $filesystemOperator) {
-                $file->move($uploadDir, $fileName);
-            } else {
-                if (false === $fh = fopen($file->getPathname(), 'rb')) {
-                    throw new InvalidArgumentException(sprintf('Unable to open file %s for reading', $file->getPathname()));
-                }
-                $filesystemOperator->writeStream($uploadDir.'/'.$fileName, $fh);
-                fclose($fh);
-            }
+        $uploadNew = static function (UploadedFile $file, string $fileName, UploadedFileAdapterInterface $uploadedFileAdapter) {
+            $uploadedFileAdapter->upload($file, $fileName);
         };
 
-        $uploadDelete = static function (File $file, ?FilesystemOperator $filesystemOperator = null) {
-            if (null === $filesystemOperator) {
-                unlink($file->getPathname());
-            } else {
-                $filesystemOperator->delete($file->getPathname());
-            }
+        $uploadDelete = static function (File $file, UploadedFileAdapterInterface $uploadedFileAdapter) {
+            $uploadedFileAdapter->delete($file);
         };
 
         $uploadFilename = static fn (UploadedFile $file): string => $file->getClientOriginalName();
@@ -143,6 +131,7 @@ class FileUploadType extends AbstractType implements DataMapperInterface
             'error_bubbling' => false,
             'allow_file_upload' => true,
             'file_constraints' => [],
+            'uploaded_file_adapter' => null,
         ]);
 
         $resolver->setAllowedTypes('upload_dir', ['string', 'null']);
@@ -154,8 +143,8 @@ class FileUploadType extends AbstractType implements DataMapperInterface
         $resolver->setAllowedTypes('allow_add', 'bool');
         $resolver->setAllowedTypes('allow_delete', 'bool');
         $resolver->setAllowedTypes('file_constraints', [Constraint::class, Constraint::class.'[]']);
+        $resolver->setAllowedTypes('uploaded_file_adapter', [UploadedFileAdapterInterface::class, 'null']);
 
-        $resolver->setAllowedTypes('filesystem_operator', ['null', FilesystemOperator::class]);
 
         $resolver->setNormalizer('upload_dir', function (Options $options, ?string $value): ?string {
             if (null === $value) {

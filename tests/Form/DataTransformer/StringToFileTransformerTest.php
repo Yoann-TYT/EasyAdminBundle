@@ -2,9 +2,9 @@
 
 namespace EasyCorp\Bundle\EasyAdminBundle\Tests\Form\DataTransformer;
 
+use EasyCorp\Bundle\EasyAdminBundle\Adapter\UploadedFileAdapterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Decorator\FlysystemFile;
 use EasyCorp\Bundle\EasyAdminBundle\Form\DataTransformer\StringToFileTransformer;
-use League\Flysystem\FilesystemOperator;
 use PHPUnit\Framework\TestCase;
 
 class StringToFileTransformerTest extends TestCase
@@ -13,13 +13,15 @@ class StringToFileTransformerTest extends TestCase
     {
         $uploadFilename = static fn ($value) => 'foo';
         $uploadValidate = static fn ($filename) => 'foo';
-        $filesystemOperatorMock = $this->createStub(FilesystemOperator::class);
-        $filesystemOperatorMock
-            ->method('fileExists')
+
+        $uploadedFileAdapterMock = $this->createStub(UploadedFileAdapterInterface::class);
+        $uploadedFileAdapterMock
+            ->method('upload')
             ->willReturn(true)
         ;
 
-        $stringToFileTransformer = new StringToFileTransformer(null, $uploadFilename, $uploadValidate, false, $filesystemOperatorMock);
+        /** @var UploadedFileAdapterInterface $uploadedFileAdapterMock */
+        $stringToFileTransformer = new StringToFileTransformer($uploadFilename, $uploadValidate, false, $uploadedFileAdapterMock);
 
         $transformedFile = $stringToFileTransformer->transform('bar');
 
