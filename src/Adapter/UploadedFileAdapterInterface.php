@@ -14,4 +14,5 @@ interface UploadedFileAdapterInterface {
     public function publicUrl(string $value): string;
     public function upload(UploadedFile $file, string $fileName): void;
     public function delete(File $file): void;
+    public function exists(string $value): bool;
 }

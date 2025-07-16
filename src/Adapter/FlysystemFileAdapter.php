@@ -41,4 +41,8 @@ class FlysystemFileAdapter implements UploadedFileAdapterInterface {
     public function delete(File $file): void {
         $this->fs->delete($file->getPathname());
     }
+
+    public function exists(string $value): bool {
+        return $this->fs->fileExists($value);
+    }
 }

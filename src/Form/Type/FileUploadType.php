@@ -93,14 +93,14 @@ class FileUploadType extends AbstractType implements DataMapperInterface
 
         $uploadFilename = static fn (UploadedFile $file): string => $file->getClientOriginalName();
 
-        $uploadValidate = static function (string $filename): string {
-            if (!file_exists($filename)) {
+        $uploadValidate = static function (string $filename, UploadedFileAdapterInterface $uploadedFileAdapter): string {
+            if (!$uploadedFileAdapter->exists($filename)) {
                 return $filename;
             }
 
             $index = 1;
             $pathInfo = pathinfo($filename);
-            while (file_exists($filename = sprintf('%s/%s_%d.%s', $pathInfo['dirname'], $pathInfo['filename'], $index, $pathInfo['extension']))) {
+            while ($uploadedFileAdapter->exists($filename = sprintf('%s/%s_%d.%s', $pathInfo['dirname'], $pathInfo['filename'], $index, $pathInfo['extension']))) {
                 ++$index;
             }
 

@@ -53,4 +53,8 @@ class LocalFileAdapter implements UploadedFileAdapterInterface {
     public function delete(File $file): void {
         unlink($file->getPathname());
     }
+
+    public function exists(string $value): bool {
+        return file_exists($this->uploadDir . $value);
+    }
 }
