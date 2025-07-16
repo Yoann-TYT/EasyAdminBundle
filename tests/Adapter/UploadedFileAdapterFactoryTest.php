@@ -32,7 +32,7 @@ class UploadedFileAdapterFactoryTest extends TestCase
     {
         $filesystemOperator = $this->createMock(FilesystemOperator::class);
         /** @var FilesystemOperator $filesystemOperator */
-        $adapter = $this->factory->createFlysystemAdapter($filesystemOperator);
+        $adapter = $this->factory->createFlysystemFileAdapter($filesystemOperator);
         $this->assertInstanceOf(FlysystemFileAdapter::class, $adapter);
     }
 }

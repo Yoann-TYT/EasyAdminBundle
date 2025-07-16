@@ -21,7 +21,7 @@ class UploadedFileAdapterFactory
         return new LocalFileAdapter($uploadDir, $basePath, $this->projectDir);
     }
 
-    public function createFlysystemAdapter(FilesystemOperator $filesystemOperator): FlysystemFileAdapter
+    public function createFlysystemFileAdapter(FilesystemOperator $filesystemOperator): FlysystemFileAdapter
     {
         return new FlysystemFileAdapter($filesystemOperator);
     }
