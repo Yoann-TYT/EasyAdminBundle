@@ -32,8 +32,8 @@ setUploadedFileAdapter
 
 You need to use this method to define how you want to store and read your files. 
 EasyAdmin provides two solutions: a classic local storage option using the ``LocalFileAdapter``,
- or a solution compatible with S3 storage using the ``FlySystemFileAdapter``.
-``FlySystemFileAdapter`` use the ``thephpleague/flysystem-bundle`` dependency to store the files.
+ or a solution compatible with S3 storage using the ``FlysystemFileAdapter``.
+``FlysystemFileAdapter`` use the ``thephpleague/flysystem-bundle`` dependency to store the files.
 
 To easily configure the content of the ``setUploadedFileAdapter`` method, we recommend using the ``UploadedFileAdapterFactory`` service, which offers two helper methods: ``createLocalFileAdapter`` and ``createFlysystemFileAdapter``::
 

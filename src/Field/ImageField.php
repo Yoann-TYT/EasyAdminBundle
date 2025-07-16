@@ -59,8 +59,6 @@ final class ImageField implements FieldInterface
 
     public function setUploadedFileAdapter(UploadedFileAdapterInterface $uploadedFileAdapter): self
     {
-        // Use the param('kernel.project_dir') to create a new LocalFileAdapter
-        
         $this->setCustomOption(self::OPTION_UPLOADED_FILE_ADAPTER, $uploadedFileAdapter);
 
         return $this;
